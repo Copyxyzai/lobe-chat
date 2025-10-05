@@ -28,6 +28,10 @@ declare global {
       GITHUB_CLIENT_ID?: string;
       GITHUB_CLIENT_SECRET?: string;
 
+      // Google
+      GOOGLE_CLIENT_ID?: string;
+      GOOGLE_CLIENT_SECRET?: string;
+
       // Azure AD
       AZURE_AD_CLIENT_ID?: string;
       AZURE_AD_CLIENT_SECRET?: string;
@@ -122,6 +126,12 @@ export const getAuthConfig = () => {
   if (process.env.GITHUB_CLIENT_SECRET) {
     console.warn(removeTipsTemplate('GITHUB_CLIENT_SECRET', 'AUTH_GITHUB_SECRET'));
   }
+  if (process.env.GOOGLE_CLIENT_ID) {
+    console.warn(removeTipsTemplate('GOOGLE_CLIENT_ID', 'AUTH_GOOGLE_ID'));
+  }
+  if (process.env.GOOGLE_CLIENT_SECRET) {
+    console.warn(removeTipsTemplate('GOOGLE_CLIENT_SECRET', 'AUTH_GOOGLE_SECRET'));
+  }
   if (process.env.LOGTO_CLIENT_ID) {
     console.warn(removeTipsTemplate('LOGTO_CLIENT_ID', 'AUTH_LOGTO_ID'));
   }
@@ -171,6 +181,10 @@ export const getAuthConfig = () => {
       // Github
       GITHUB_CLIENT_ID: z.string().optional(),
       GITHUB_CLIENT_SECRET: z.string().optional(),
+
+      // Google
+      GOOGLE_CLIENT_ID: z.string().optional(),
+      GOOGLE_CLIENT_SECRET: z.string().optional(),
 
       // Azure AD
       AZURE_AD_CLIENT_ID: z.string().optional(),
@@ -234,6 +248,10 @@ export const getAuthConfig = () => {
       // Github
       GITHUB_CLIENT_ID: process.env.GITHUB_CLIENT_ID,
       GITHUB_CLIENT_SECRET: process.env.GITHUB_CLIENT_SECRET,
+
+      // Google
+      GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID,
+      GOOGLE_CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET,
 
       // Azure AD
       AZURE_AD_CLIENT_ID: process.env.AZURE_AD_CLIENT_ID,

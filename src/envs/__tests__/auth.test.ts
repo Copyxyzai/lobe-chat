@@ -157,6 +157,21 @@ describe('getAuthConfig', () => {
         expect.stringMatching(/GITHUB_CLIENT_SECRET.*AUTH_GITHUB_SECRET/),
       );
     });
+    it('should warn about Google deprecated environment variables', () => {
+      // Set all deprecated environment variables
+      process.env.GOOGLE_CLIENT_ID = 'google_client_id';
+      process.env.GOOGLE_CLIENT_SECRET = 'google_client_secret';
+      // Call the function
+      getAuthConfig();
+
+      // Check that the spyConsoleWarn function was called for each deprecated environment variable
+      expect(spyConsoleWarn).toHaveBeenCalledWith(
+        expect.stringMatching(/GOOGLE_CLIENT_ID.*AUTH_GOOGLE_ID/),
+      );
+      expect(spyConsoleWarn).toHaveBeenCalledWith(
+        expect.stringMatching(/GOOGLE_CLIENT_SECRET.*AUTH_GOOGLE_SECRET/),
+      );
+    });
     it('should warn about Logto deprecated environment variables', () => {
       // Set all deprecated environment variables
       process.env.LOGTO_CLIENT_ID = 'logto_client_id';
