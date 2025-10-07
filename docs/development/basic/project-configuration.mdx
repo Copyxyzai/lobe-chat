@@ -1,0 +1,212 @@
+# Project Configuration
+
+This document provides a comprehensive overview of where and how the LobeChat project is configured.
+
+## Configuration Files Overview
+
+LobeChat uses multiple configuration files, each serving a specific purpose in the development and build process.
+
+### 1. Next.js Configuration
+
+**File:** `next.config.ts`
+
+This is the main Next.js configuration file that controls:
+
+- Build settings (production/development)
+- Webpack configuration
+- Runtime modes (standalone, desktop, Docker)
+- PWA/Service Worker settings
+- Security headers (CSP)
+- Asset optimization and caching
+- Experimental features
+- Redirects and routing
+
+Key environment variables used:
+- `NODE_ENV` - Production or development mode
+- `DOCKER` - Docker build mode
+- `NEXT_PUBLIC_IS_DESKTOP_APP` - Desktop application mode
+- `REACT_SCAN_MONITOR_API_KEY` - React scan monitoring
+- `NEXT_PUBLIC_CLIENT_DB` - Client database type
+- `ENABLED_CSP` - Content Security Policy
+- `ANALYZE` - Bundle analyzer
+- `NEXT_PUBLIC_ASSET_PREFIX` - CDN/asset prefix
+
+### 2. TypeScript Configuration
+
+**File:** `tsconfig.json`
+
+Configures TypeScript compiler options:
+- Target ES version
+- Module resolution strategy
+- Path aliases (`@/*`, `@/database/*`, etc.)
+- JSX settings
+- Type checking strictness
+
+### 3. Package Management
+
+**Files:** 
+- `package.json` - Main package configuration and scripts
+- `pnpm-workspace.yaml` - Monorepo workspace configuration
+- `.npmrc` - npm configuration
+- `.bunfig.toml` - Bun configuration
+
+The project uses:
+- `pnpm` for dependency management
+- `bun` for running npm scripts
+- Monorepo structure with workspaces
+
+### 4. Environment Variables
+
+**Files:**
+- `.env.example` - Example environment variables template
+- `.env.example.development` - Development-specific examples
+- `.env.desktop` - Desktop application configuration
+
+Main categories of environment variables:
+
+#### Security Settings
+- `ACCESS_CODE` - Application access control
+- `ENABLED_CSP` - Content Security Policy
+- `KEY_VAULTS_SECRET` - Database encryption key
+
+#### AI Provider Services
+- `OPENAI_API_KEY`, `OPENAI_PROXY_URL`, `OPENAI_MODEL_LIST`
+- `ANTHROPIC_API_KEY`, `ANTHROPIC_PROXY_URL`
+- `GOOGLE_API_KEY`
+- `AZURE_API_KEY`, `AZURE_ENDPOINT`, `AZURE_API_VERSION`
+- And many other AI provider configurations
+
+#### Database
+- `NEXT_PUBLIC_SERVICE_MODE` - Service mode (server/client)
+- `DATABASE_URL` - PostgreSQL connection string
+- `NEXT_PUBLIC_CLIENT_DB` - Client-side database type
+
+#### Authentication
+- Clerk: `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY`, `CLERK_SECRET_KEY`
+- NextAuth: `NEXT_PUBLIC_ENABLE_NEXT_AUTH`, `NEXT_AUTH_SECRET`
+- Auth0, Casdoor, and other providers
+
+#### Storage
+- S3 configuration for object storage
+- `S3_ACCESS_KEY_ID`, `S3_SECRET_ACCESS_KEY`, `S3_BUCKET`, etc.
+
+### 5. Application Configuration
+
+**Directory:** `src/config/`
+
+Contains runtime application configuration:
+- `modelProviders/` - AI model provider configurations
+- `db.ts` - Database configuration
+- `featureFlags/` - Feature flag configurations
+
+### 6. Environment Variable Definitions
+
+**Directory:** `src/envs/`
+
+Type-safe environment variable definitions using `@t3-oss/env-nextjs`:
+- `app.ts` - Application-wide settings
+- `auth.ts` - Authentication settings
+- `llm.ts` - LLM provider settings
+- `file.ts` - File storage settings
+- `analytics.ts` - Analytics configuration
+- `langfuse.ts` - Langfuse configuration
+- And more...
+
+### 7. Build and Development Tools
+
+#### Linting and Formatting
+- `.eslintrc.js` - ESLint configuration
+- `.prettierrc.js` - Prettier configuration
+- `.stylelintrc.js` - Stylelint configuration
+- `.remarkrc.js` / `.remarkrc.mdx.js` - Markdown linting
+
+#### Git and Commits
+- `.husky/` - Git hooks
+- `.commitlintrc.js` - Commit message linting
+- `.changelogrc.js` - Changelog generation
+- `.releaserc.js` - Semantic release configuration
+
+#### Testing
+- `vitest.config.mts` - Vitest test configuration
+
+#### Database
+- `drizzle.config.ts` - Drizzle ORM configuration
+
+#### Documentation
+- `.seorc.cjs` - SEO configuration for documentation
+
+#### Internationalization
+- `.i18nrc.js` - i18n configuration
+- `src/locales/` - Translation files
+
+### 8. Deployment Configurations
+
+- `Dockerfile` - Standard Docker build
+- `Dockerfile.database` - Database-enabled Docker build
+- `Dockerfile.pglite` - PGlite-specific build
+- `docker-compose.development.yml` - Local development setup
+- `vercel.json` - Vercel deployment settings
+- `netlify.toml` - Netlify deployment settings
+
+### 9. Editor Configuration
+
+- `.editorconfig` - Cross-editor settings
+- `.vscode/` - VS Code settings
+- `.cursor/` - Cursor IDE settings
+- `CLAUDE.md` - Claude AI coding assistant guidelines
+
+## Configuration Loading Order
+
+1. **Build Time**: `next.config.ts` reads environment variables and applies build settings
+2. **Runtime (Server)**: Environment variables from `.env` or deployment platform
+3. **Runtime (Client)**: Only `NEXT_PUBLIC_*` variables are exposed to the browser
+4. **Application**: `src/config/` and `src/envs/` provide type-safe access to configuration
+
+## Best Practices
+
+### Environment Variables
+- Never commit `.env` files with real credentials
+- Use `.env.example` as a template
+- Prefix client-side variables with `NEXT_PUBLIC_`
+- Use `src/envs/*` files for type-safe environment variable access
+
+### Configuration Changes
+- Update both code and documentation when adding new configuration
+- Test configuration changes in development before deploying
+- Use feature flags for gradual rollouts
+
+### Monorepo Configuration
+- Workspace packages can have their own `package.json`
+- Shared dependencies are hoisted to the root
+- Use workspace protocol (`workspace:*`) for internal dependencies
+
+## Common Configuration Tasks
+
+### Adding a New Environment Variable
+
+1. Add to `.env.example` with description
+2. Define in appropriate `src/envs/*.ts` file with validation
+3. Update documentation
+4. Use type-safe import: `import { appEnv } from '@/envs/app';`
+
+### Changing Build Settings
+
+1. Modify `next.config.ts`
+2. Test locally: `bun run dev`
+3. Test production build: `bun run build`
+4. Update documentation if needed
+
+### Adding a New AI Provider
+
+1. Create configuration in `src/config/modelProviders/[provider].ts`
+2. Export from `src/config/modelProviders/index.ts`
+3. Add environment variables to `.env.example`
+4. Define environment variables in `src/envs/llm.ts`
+
+## Reference Files
+
+For detailed information about specific aspects:
+- Directory structure: See [folder-structure.mdx](./folder-structure.mdx)
+- Development setup: See [setup-development.mdx](./setup-development.mdx)
+- Environment variables: See `/docs/self-hosting/environment-variables/`
+- Contributing: See [contributing-guidelines.mdx](./contributing-guidelines.mdx)
