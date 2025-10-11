@@ -194,9 +194,9 @@ const Repair = memo(() => {
                         }
                         icon={
                           queryResult.success ? (
-                            <AlertCircle size={16} />
-                          ) : (
                             <CheckCircle size={16} />
+                          ) : (
+                            <AlertCircle size={16} />
                           )
                         }
                         message={t('clientDB.solve.repair.sql.result')}
