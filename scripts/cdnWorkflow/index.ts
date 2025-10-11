@@ -208,6 +208,12 @@ class ImageCDNUploader {
     } else {
       consola.info('No new images to upload.');
     }
+
+    // 替换文章中的图片链接
+    this.replaceLinksInPosts();
+
+    // 替换 changelog index 中的图片链接
+    this.replaceLinksInChangelogIndex();
   }
 }
 
